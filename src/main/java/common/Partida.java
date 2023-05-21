@@ -23,7 +23,7 @@ public class Partida implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     private String nombre;
@@ -47,12 +47,12 @@ public class Partida implements Serializable {
     public Partida() {
     }
 
-    
-    public Partida(Long id, String nombre, List<Jugador> jugadores, boolean partidaIniciada) {
-        this.id = id;
+    public Partida(String nombre, List<Jugador> jugadores, int dificultad) {
         this.nombre = nombre;
         this.jugadores = jugadores;
-        this.partidaIniciada = partidaIniciada;
+        this.partidaIniciada = false;
+        this.partidaFinalizada = false;
+        this.dificultad = dificultad;
     }
 
     public Long getId() {
@@ -85,6 +85,22 @@ public class Partida implements Serializable {
 
     public void setPartidaIniciada(boolean partidaIniciada) {
         this.partidaIniciada = partidaIniciada;
+    }
+
+    public boolean isPartidaFinalizada() {
+        return partidaFinalizada;
+    }
+
+    public void setPartidaFinalizada(boolean partidaFinalizada) {
+        this.partidaFinalizada = partidaFinalizada;
+    }
+
+    public int getDificultad() {
+        return dificultad;
+    }
+
+    public void setDificultad(int dificultad) {
+        this.dificultad = dificultad;
     }
 
     

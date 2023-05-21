@@ -20,7 +20,13 @@ public interface IJugador {
      * @return id de sesión
      * @throws common.JugadorException si el jugador no existe
      */
-    public int getSesion(String login) throws JugadorException;
+    public Jugador getSesion(Jugador jugador) throws JugadorException;
+    
+    /**
+     * Registra un jugador en la DB
+     * @param jugador jugador a registrar
+     */
+    public Jugador registrarUsuario(Jugador jugador) throws Exception;
     
     /***
      * Cierra la sesión en curso.
@@ -38,5 +44,5 @@ public interface IJugador {
      * Sale de la partida si esta no ha iniciado.
      * @throws common.PartidaException si el jugador se encuentra en una partida.
      */
-    public void salirDePartida() throws PartidaException;
+    public void salirDePartida(Partida partida) throws PartidaException;
 }

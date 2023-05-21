@@ -2,7 +2,9 @@ package main;
 
 import common.HistorialPartida;
 import common.IHistorialPartida;
+import common.Utils;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.ConcurrencyManagementType;
@@ -40,7 +42,11 @@ public class HistorialPartidaEJB implements IHistorialPartida {
 
     @Override
     public void guardarHistorial(HistorialPartida historial) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            Utils.persisteixAmbTransaccio(historial, userTransaction, em, log);
+        } catch (Exception ex) {
+            log.log(Level.INFO, ex.getMessage());
+        }
     }
     
     

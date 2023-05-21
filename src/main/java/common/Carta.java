@@ -5,14 +5,13 @@
  */
 package common;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.image.Image;
 
 /**
@@ -69,7 +68,7 @@ public class Carta implements Serializable {
     }
 
     public static List<String> getPalosValidos() {
-        return Arrays.asList("2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace");
+        return Arrays.asList("hearts","diamonds","clubs","spades");
     }
     
     public static List<String> getCarasValidas()
@@ -106,9 +105,13 @@ public class Carta implements Serializable {
      * This method will return an Image that represents the Card
      */
     public Image getImage()
-    {
-        String pathName = "images/"+cara+"_of_"+palo+".png";
-        return new Image(Carta.class.getResourceAsStream(pathName));
+    {       
+        try {
+            return new Image(Carta.class.getClassLoader().getResource("images/"+cara+"_of_"+palo+".png").openStream());
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
     }
 
     public Image getBackOfCardImage()

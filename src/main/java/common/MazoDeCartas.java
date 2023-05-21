@@ -17,9 +17,10 @@ import java.util.List;
 public class MazoDeCartas implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private int maximoCartas = 13;
+    private ArrayList<CartaMemory> mazo;
 
-    private ArrayList<Carta> mazo;
-
+    int contador = 0;
     public MazoDeCartas() {
         this.mazo = new ArrayList<>();
         List<String> suits = Carta.getPalosValidos();
@@ -29,7 +30,10 @@ public class MazoDeCartas implements Serializable {
         {
             for (String faceName : faceNames)
             {
-                mazo.add(new Carta(suit,faceName));
+                if(contador == maximoCartas) break;
+                mazo.add(new CartaMemory(suit,faceName));
+                mazo.add(new CartaMemory(suit,faceName));
+                contador++;
             }
         }
     }

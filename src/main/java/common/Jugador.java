@@ -12,8 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 
 /**
  * 
@@ -25,23 +26,36 @@ public class Jugador implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @NotEmpty(message = "El nombre del jugador no puede estar vacío.")
+    @Size(min = 3, max = 10, message = "La longitud ha de estar entre 3 y 10 caracteres")
     private String nombre;
 
+    @Email(message = "El email no es válido")
+    private String email;
+    
     @OneToMany(mappedBy = "jugador")
     private List<HistorialPartida> historialPartidas;
     
     public Jugador() {
     }
 
-    public Jugador(Long id, String nombre) {
-        this.id = id;
+    public Jugador(String nombre, String email) {
         this.nombre = nombre;
+        this.email = email;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+     
     public Long getId() {
         return id;
     }

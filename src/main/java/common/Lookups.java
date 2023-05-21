@@ -15,7 +15,7 @@ import main.PartidaEJB;
 
 /**
  * Classe encarregada de fer les connexions amb els EJB remots
- * @author manel
+ * @author alexandru
  */
 public class Lookups {
     
