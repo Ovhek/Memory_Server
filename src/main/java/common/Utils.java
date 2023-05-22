@@ -4,6 +4,9 @@
  */
 package common;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -63,10 +66,11 @@ public class Utils {
 
         return ob;
     }
-    
+
     /**
      * Alerta de confirmación al salir de la app
-     * @param mensaje 
+     *
+     * @param mensaje
      */
     public static void mostrarDialogoConfirmacion(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -80,5 +84,15 @@ public class Utils {
                 Platform.exit();
             }
         }
+    }
+    
+    /**
+     * Obtener día y hora actual con formato EU
+     * @return String
+     */
+    public static String getCurrentDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String date = dateFormat.format(new Date());
+        return date;
     }
 }
