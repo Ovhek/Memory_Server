@@ -80,8 +80,16 @@ public class Jugador implements Serializable {
         this.historialPartidas = historialPartidas;
     }
 
-    
-   
-
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Jugador{");
+        sb.append("id=").append(id);
+        sb.append(", nombre=").append(nombre);
+        sb.append(", email=").append(email);
+        sb.append(", historialPartidas=").append(historialPartidas);
+        sb.append('}');
+        return sb.toString();
+    }
     
 }

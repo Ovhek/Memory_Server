@@ -4,9 +4,16 @@
  */
 package common;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javax.persistence.EntityManager;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
@@ -58,5 +65,34 @@ public class Utils {
         }
 
         return ob;
+    }
+
+    /**
+     * Alerta de confirmación al salir de la app
+     *
+     * @param mensaje
+     */
+    public static void mostrarDialogoConfirmacion(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Diálogo de confirmación...");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+
+        Optional<ButtonType> resultado = alert.showAndWait();
+        if (resultado.isPresent()) {
+            if (resultado.get() == ButtonType.OK) {
+                Platform.exit();
+            }
+        }
+    }
+    
+    /**
+     * Obtener día y hora actual con formato EU
+     * @return String
+     */
+    public static String getCurrentDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String date = dateFormat.format(new Date());
+        return date;
     }
 }
