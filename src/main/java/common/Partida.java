@@ -31,14 +31,14 @@ public class Partida implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_jugador")
     private Jugador jugador;
-    
-    private boolean partidaIniciada;
-
+   
     private boolean partidaFinalizada;
     
     private int numIntentos;
     
-    private Date tiempoRestante;
+    private int tiempoRestante;
+    
+    private int puntos;
     
     /*
         0  --> Fácil
@@ -53,9 +53,10 @@ public class Partida implements Serializable {
 
     public Partida(Jugador jugador, int dificultad) {
         this.jugador = jugador;
-        this.partidaIniciada = false;
         this.partidaFinalizada = false;
         this.dificultad = dificultad;
+        this.numIntentos = 0;
+        this.puntos = 0;
     }
 
     public Long getId() {
@@ -72,14 +73,6 @@ public class Partida implements Serializable {
 
     public void setJugador(Jugador jugador) {
         this.jugador = jugador;
-    }
-
-    public boolean isPartidaIniciada() {
-        return partidaIniciada;
-    }
-
-    public void setPartidaIniciada(boolean partidaIniciada) {
-        this.partidaIniciada = partidaIniciada;
     }
 
     public boolean isPartidaFinalizada() {
@@ -106,12 +99,20 @@ public class Partida implements Serializable {
         this.numIntentos = numIntentos;
     }
 
-    public Date getTiempoRestante() {
+    public int getTiempoRestante() {
         return tiempoRestante;
     }
 
-    public void setTiempoRestante(Date tiempoRestante) {
+    public void setTiempoRestante(int tiempoRestante) {
         this.tiempoRestante = tiempoRestante;
+    }
+
+    public int getPuntos() {
+        return puntos;
+    }
+
+    public void setPuntos(int puntos) {
+        this.puntos = puntos;
     }
 
 }

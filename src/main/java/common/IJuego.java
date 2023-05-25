@@ -42,14 +42,8 @@ public interface IJuego {
      * @return La partida comenzada
      * @throws common.PartidaException si la partida esta llena.
      */
-    public Partida empezarPartida() throws PartidaException;
-    
-    /***
-     * Sale de la partida si esta no ha iniciado.
-     * @throws common.PartidaException si el jugador se encuentra en una partida.
-     */
-    public void salirDePartida(Partida partida) throws PartidaException;
-    
+    public Partida empezarPartida(Partida partida) throws PartidaException;
+
         /***
      * Ve el historial de partidas.
      * @param idJugador el id del jugador.
@@ -57,59 +51,48 @@ public interface IJuego {
      */
     public List<Partida> verHistorial(int idJugador);
     
-    /**
-     * Actualiza una partida en la BD
-     * @param partida partida a guardar
-     */
-    public void actualizarPartida(Partida partida);
-    
-    
-        /***
-     * Empieza una partida
-     * @param partida a empezar
-     * @throws common.PartidaException si la partida ya está empezada.
-     */
-    public void empezarPartida(Partida partida) throws PartidaException;
-    
     /***
      * Termina una partida
      * @param partida
      * @throws common.PartidaException si la partida ya está terminada.
      */
-    public void terminarPartida(Partida partida) throws PartidaException;
+    public Partida terminarPartida() throws Exception;
     
     /***
      * Crea un mazo de cartas y lo mezcla
      * @return Mazo de cartas de la partida
      */
-    public MazoDeCartas mezclarCartas();
+    public MazoDeCartas obtenerMazoMezclado();
     
     /**
-     * Comprueba si dos cartas coinciden
-     * @param primera primera carta
-     * @param segunda segunda carta
+     * Comprueba si las dos cartas que estan en el servidor coinciden
      * @return si coinciden o no.
      */
-    public boolean cartasConciden(Carta primera, Carta segunda);
+    public boolean cartasConciden();
     
     /**
      * Aumenta el contador de intentos.
-     * @param anteriorNumero el numero de intentos anterior.
      * @return el numero de intentos +1
+     * @throws common.PartidaException
      */
-    public int sumarIntentos(int anteriorNumero);
+    public int sumarIntentos() throws Exception; 
     
     /**
      * Voltea una carta según el indice
      * @param carta carta a voltear
      * @return 
      */
-    public Image voltearCarta(Carta carta);
+    public Image voltearCarta(CartaMemory carta);
     
-    /***
-     * Sale de la partida si esta no ha iniciado.
-     * @throws common.PartidaException si el jugador se encuentra en una partida.
+    /**
+     * Función encargada de obtener el salón de la fama.
+     * @return lista de partidas ordenadas de mayor a menor
      */
-    //public int obtenerSegundosRestantes() throws PartidaException;
+    public List<Partida> getHallOfGame() throws Exception;
     
+    /**
+     * Obtiene el tiempo actual de la partida
+     * @return tiempo actual de la partida.
+     */
+    public int obtenerTiempoPartida();
 }

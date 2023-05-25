@@ -1,6 +1,6 @@
 package main;
 
-import common.Carta;
+import common.CartaMemory;
 import common.IJuego;
 import common.Jugador;
 import common.JugadorException;
@@ -12,6 +12,8 @@ import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.image.Image;
@@ -26,7 +28,6 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
@@ -63,9 +64,14 @@ public class JuegoEJB implements IJuego {
 
     @Resource
     private UserTransaction userTransaction;
-
-    String emailUsuario = null;
-
+    
+    private String emailUsuario = null;
+    private Partida partidaActual = null;
+    private CartaMemory carta1 = null;
+    private CartaMemory carta2 = null;
+    private boolean primerVolteo = true;
+    private boolean victoria = false;
+    
     // Injecció d'un EJB local. En aquest cas no cal fer lookup.
     @EJB
     AppSingletonEJB singleton;
@@ -88,7 +94,7 @@ public class JuegoEJB implements IJuego {
             log.log(Level.INFO, "Usuario remoto: {0}", p.getName());
             log.log(Level.INFO, "Hash: {0}", p.hashCode());
 
-        } catch (Exception ex) {
+        } catch (IllegalStateException ex) {
             log.log(Level.INFO, "ERROR conectando:  {0} ", new Object[]{ex.toString()});
         }
     }
@@ -123,7 +129,6 @@ public class JuegoEJB implements IJuego {
         log.log(Level.INFO, "Sesión finalizada: " + this.emailUsuario);
     }
 
-
     @Override
     public Jugador registrarUsuario(Jugador jugador) throws Exception {
         Jugador j = null;
@@ -147,53 +152,145 @@ public class JuegoEJB implements IJuego {
     }
 
     @Override
-    public void salirDePartida(Partida partida) throws PartidaException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Partida terminarPartida() throws Exception {
+
+        if (partidaActual == null) {
+            throw new PartidaException("Esta partida no es la misma que la actual");
+        }
+
+        partidaActual.setPuntos(calcularPuntos());
+        Partida p = (Partida)Utils.persisteixAmbTransaccio(partidaActual, userTransaction, em, log);
+
+        partidaActual = null;
+        return p;
     }
 
     @Override
-    public Partida empezarPartida() throws PartidaException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Partida empezarPartida(Partida partida) throws PartidaException {
+        Partida p = null;
+        switch (partida.getDificultad()) {
+            case 0:
+                partida.setTiempoRestante(300);
+                break;
+            case 2:
+                partida.setTiempoRestante(200);
+                break;
+            case 3:
+                partida.setTiempoRestante(100);
+                break;
+            default:
+                throw new AssertionError();
+        }
+        try {
+            p = (Partida) Utils.persisteixAmbTransaccio(partida, userTransaction, em, log);
+
+        } catch (Exception ex) {
+            String msg = "Error al empezar la partida: " + ex.getMessage();
+            log.log(Level.WARNING, msg);
+            throw new PartidaException(msg);
+        }
+        partidaActual = p;
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask(){
+            @Override
+            public void run(){
+                try {
+                    actualizarTiempoPartida();
+                } catch (PartidaException ex) {
+                   log.log(Level.WARNING, ex.getMessage());
+                }
+            }
+        }, 1000,1000);
+        return p;
     }
 
     @Override
     public List<Partida> verHistorial(int idJugador) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        TypedQuery<Partida> query = em.createQuery("SELECT p FROM Partida p WHERE p.jugador.id = :idjugador", Partida.class);
+        query.setParameter("idjugador", idJugador);
+        return query.getResultList();
     }
 
     @Override
-    public void actualizarPartida(Partida partida) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public MazoDeCartas obtenerMazoMezclado() {
+        MazoDeCartas mazo = new MazoDeCartas();
+        mazo.mezclar();
+        return mazo;
     }
 
     @Override
-    public void empezarPartida(Partida partida) throws PartidaException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean cartasConciden() {
+        if (carta1 == null || carta2 == null) {
+            return false;
+        }
+        return carta1.isMismaCarta(carta2);
     }
 
     @Override
-    public void terminarPartida(Partida partida) throws PartidaException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int sumarIntentos() throws Exception {
+        if (partidaActual == null) {
+            throw new PartidaException("NO existe partida actual");
+        }
+        partidaActual.setNumIntentos(partidaActual.getNumIntentos());
+        Utils.persisteixAmbTransaccio(partidaActual, userTransaction, em, log);
+
+        return partidaActual.getNumIntentos();
     }
 
     @Override
-    public MazoDeCartas mezclarCartas() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Image voltearCarta(CartaMemory carta) {
+        if (carta.isEmparejada()) {
+            return carta.getImage();
+        }
+        carta.setGirada(!carta.isGirada());
+
+        if (carta1 == null) {
+            carta1 = carta;
+        } else if (carta2 == null) {
+            carta2 = carta;
+        } else {
+            if (primerVolteo) {
+                carta1 = carta;
+                carta2 = null;
+            } else {
+                carta2 = carta;
+                carta1 = null;
+            }
+        }
+        primerVolteo = !primerVolteo;
+        return carta.isGirada() ? carta.getBackOfCardImage() : carta.getImage();
     }
 
     @Override
-    public boolean cartasConciden(Carta primera, Carta segunda) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<Partida> getHallOfGame() throws Exception {
+        TypedQuery<Partida> query = em.createQuery("SELECT DISTINCT p.jugador.id FROM Partida p ORDER BY p.puntos DESC", Partida.class);
+        return query.getResultList();
     }
 
+    private int calcularPuntos() {
+        int puntos = 0;
+        int intentos = partidaActual.getNumIntentos();
+        int segundos = partidaActual.getTiempoRestante();
+        
+        puntos = (80 - intentos) * (300 - segundos);
+        
+        puntos = Math.max(puntos, 0);
+        
+        return puntos;
+    }
+
+    private void actualizarTiempoPartida() throws PartidaException{
+        if(partidaActual == null) return;
+        int tiempoActual = partidaActual.getTiempoRestante();
+        
+        if(tiempoActual > 0){
+            partidaActual.setTiempoRestante(tiempoActual-1);
+        }
+        System.out.println("Tiempo actualizado: " + tiempoActual);
+    }
+    
     @Override
-    public int sumarIntentos(int anteriorNumero) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int obtenerTiempoPartida(){
+        return partidaActual.getTiempoRestante();
     }
-
-    @Override
-    public Image voltearCarta(Carta carta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
 }

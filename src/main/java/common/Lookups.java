@@ -23,7 +23,7 @@ public class Lookups {
     
     private static final String appName = "Server_Memory-" + APP_VERSION;
     
-    public static IJuego jugadorEJBRemoteLookup() throws NamingException
+    public static IJuego juegoEJBRemoteLookup() throws NamingException
     {
         // "/EJB_Exemple1_Server-1/CarroCompraEJB!common.ICarroCompra?stateful"
         

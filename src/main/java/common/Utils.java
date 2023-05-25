@@ -5,7 +5,6 @@
 package common;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,6 +16,7 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.util.Duration;
 import javax.persistence.EntityManager;
 import javax.transaction.HeuristicMixedException;
@@ -80,15 +80,15 @@ public class Utils {
     }
 
     /**
-     * Alerta de confirmación al salir de la app
+     * Alerta de confirmaciï¿½n al salir de la app
      *
      * @param mensaje
      */
     public static void alertExit() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Diálogo de confirmación...");
+        alert.setTitle("Diï¿½logo de confirmaciï¿½n...");
         alert.setHeaderText(null);
-        alert.setContentText("¿Deseas salir del juego?");
+        alert.setContentText("ï¿½Deseas salir del juego?");
 
         Optional<ButtonType> resultado = alert.showAndWait();
         if (resultado.isPresent()) {
@@ -102,7 +102,7 @@ public class Utils {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Info");
         alert.setHeaderText(null);
-        alert.setContentText("¡Tiempo finalizado!");
+        alert.setContentText("ï¿½Tiempo finalizado!");
         alert.show();
     }
     
@@ -113,12 +113,12 @@ public class Utils {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Info");
         alert.setHeaderText(null);
-        alert.setContentText("¡Debes hacer login antes de seguir en la app!");
+        alert.setContentText("ï¿½Debes hacer login antes de seguir en la app!");
         alert.showAndWait();
     }
 
     /**
-     * Obtener día y hora actual con formato EU
+     * Obtener dï¿½a y hora actual con formato EU
      *
      * @return String
      */
@@ -129,7 +129,7 @@ public class Utils {
     }
     
     /**
-     * Reproducir la música de fondo del juego indefinidamente
+     * Reproducir la mï¿½sica de fondo del juego indefinidamente
      */
     public static void playMusic() {
         
@@ -138,26 +138,28 @@ public class Utils {
         //String path = "http://server/soundtrack.mp3";
 
         try {
-            // Instanciar el archivo mp3 a través de la ruta
+            // Instanciar el archivo mp3 a travï¿½s de la ruta
             File audio = new File(path);
 
+            var musicResource = Utils.class.getClassLoader().getResource("logica/music/soundtrack.mp3");
             // Actualizamos el recurso MP3
-            media = new Media(audio.toURI().toString());
+            media = new Media(musicResource.toURI().toString());
 
             // Inicializamos el reproductor
             player = new MediaPlayer(media);
 
             // Configuraciones adicionales del reproductor
-            player.setCycleCount(MediaPlayer.INDEFINITE); // Repetir la música de fondo indefinidamente
+            player.setCycleCount(MediaPlayer.INDEFINITE); // Repetir la mï¿½sica de fondo indefinidamente
             player.setVolume(0.25); // Volumen (0.0 - 1.0)
             player.setStartTime(Duration.ZERO); // Iniciar desde el principio
             
-            // Reproducir la música
+            // Reproducir la mï¿½sica
             player.play();
 
-        } catch (MediaException e) {
+        } catch (Exception e) {
 
             System.out.println("ERROR abriendo el fichero: " + path + ":" + e.toString());
         }
     }
+    
 }
