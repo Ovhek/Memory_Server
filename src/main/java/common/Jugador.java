@@ -37,7 +37,7 @@ public class Jugador implements Serializable {
     private String email;
     
     @OneToMany(mappedBy = "jugador")
-    private List<HistorialPartida> historialPartidas;
+    private List<Partida> partidas;
     
     public Jugador() {
     }
@@ -72,24 +72,21 @@ public class Jugador implements Serializable {
         this.nombre = nombre;
     }
 
-    public List<HistorialPartida> getHistorialPartidas() {
-        return historialPartidas;
+    public List<Partida> getPartidas() {
+        return partidas;
     }
 
-    public void setHistorialPartidas(List<HistorialPartida> historialPartidas) {
-        this.historialPartidas = historialPartidas;
+    public void setPartidas(List<Partida> partidas) {
+        this.partidas = partidas;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Jugador{");
-        sb.append("id=").append(id);
-        sb.append(", nombre=").append(nombre);
-        sb.append(", email=").append(email);
-        sb.append(", historialPartidas=").append(historialPartidas);
-        sb.append('}');
-        return sb.toString();
+        return "Jugador{" + "id=" + id + ", nombre=" + nombre + ", email=" + email + ", partidas=" + partidas + '}';
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
     
 }

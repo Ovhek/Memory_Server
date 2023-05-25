@@ -1,16 +1,20 @@
 package main;
 
-import common.IJugador;
+import common.Carta;
+import common.IJuego;
 import common.Jugador;
 import common.JugadorException;
+import common.MazoDeCartas;
 import common.Partida;
 import common.PartidaException;
 import common.Utils;
 import java.security.Principal;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.image.Image;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
@@ -40,7 +44,7 @@ import javax.transaction.UserTransaction;
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER) //Simply put, in container-managed concurrency, the container controls how clients' access to methods
 @TransactionManagement(value = TransactionManagementType.BEAN) // o bé és el contenidor el que gestiona les transaccions a la BBDD o bé és el programador/a manualment
 //@TransactionAttribute(TransactionAttributeType.REQUIRED) //https://gerardo.dev/ejb-basics.html
-public class JugadorEJB implements IJugador {
+public class JuegoEJB implements IJuego {
 
     @Resource
     private SessionContext sessionContext;
@@ -68,7 +72,7 @@ public class JugadorEJB implements IJugador {
 
     Queue<String> mensajes;
 
-    private static final Logger log = Logger.getLogger(JugadorEJB.class.getName());
+    private static final Logger log = Logger.getLogger(JuegoEJB.class.getName());
 
     @PostConstruct
     public void init() {
@@ -108,6 +112,7 @@ public class JugadorEJB implements IJugador {
             throw new JugadorException(msg);
         }
 
+        emailUsuario = jugador.getEmail();
         log.log(Level.INFO, "Jugador obtenido: " + jugador.getEmail());
         return jugador;
     }
@@ -118,10 +123,6 @@ public class JugadorEJB implements IJugador {
         log.log(Level.INFO, "Sesión finalizada: " + this.emailUsuario);
     }
 
-    @Override
-    public void unirseAPartida(Partida partida) throws PartidaException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
     @Override
     public Jugador registrarUsuario(Jugador jugador) throws Exception {
@@ -147,6 +148,51 @@ public class JugadorEJB implements IJugador {
 
     @Override
     public void salirDePartida(Partida partida) throws PartidaException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Partida empezarPartida() throws PartidaException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Partida> verHistorial(int idJugador) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void actualizarPartida(Partida partida) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void empezarPartida(Partida partida) throws PartidaException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void terminarPartida(Partida partida) throws PartidaException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public MazoDeCartas mezclarCartas() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean cartasConciden(Carta primera, Carta segunda) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public int sumarIntentos(int anteriorNumero) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Image voltearCarta(Carta carta) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

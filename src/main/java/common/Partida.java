@@ -6,7 +6,7 @@
 package common;
 
 import java.io.Serializable;
-import java.util.List;
+import java.sql.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,15 +26,16 @@ public class Partida implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    private String nombre;
-    
     @ManyToMany
-    private List<Jugador> jugadores;
+    private Jugador jugador;
     
     private boolean partidaIniciada;
 
     private boolean partidaFinalizada;
     
+    private int numIntentos;
+    
+    private Date tiempoRestante;
     
     /*
         0  --> Fácil
@@ -47,9 +48,8 @@ public class Partida implements Serializable {
     public Partida() {
     }
 
-    public Partida(String nombre, List<Jugador> jugadores, int dificultad) {
-        this.nombre = nombre;
-        this.jugadores = jugadores;
+    public Partida(Jugador jugador, int dificultad) {
+        this.jugador = jugador;
         this.partidaIniciada = false;
         this.partidaFinalizada = false;
         this.dificultad = dificultad;
@@ -63,20 +63,12 @@ public class Partida implements Serializable {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public Jugador getJugador() {
+        return jugador;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public List<Jugador> getJugadores() {
-        return jugadores;
-    }
-
-    public void setJugadores(List<Jugador> jugadores) {
-        this.jugadores = jugadores;
+    public void setJugador(Jugador jugador) {
+        this.jugador = jugador;
     }
 
     public boolean isPartidaIniciada() {
@@ -103,7 +95,20 @@ public class Partida implements Serializable {
         this.dificultad = dificultad;
     }
 
-    
-    
+    public int getNumIntentos() {
+        return numIntentos;
+    }
+
+    public void setNumIntentos(int numIntentos) {
+        this.numIntentos = numIntentos;
+    }
+
+    public Date getTiempoRestante() {
+        return tiempoRestante;
+    }
+
+    public void setTiempoRestante(Date tiempoRestante) {
+        this.tiempoRestante = tiempoRestante;
+    }
 
 }
