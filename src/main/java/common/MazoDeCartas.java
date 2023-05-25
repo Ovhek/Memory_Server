@@ -51,12 +51,9 @@ public class MazoDeCartas implements Serializable {
      * If the deck is empty, it will return null
      * @return 
      */
-    public CartaMemory getPrimeraCartaMazo()
+    public List<CartaMemory> getCartas()
     {
-        if (!mazo.isEmpty())
-            return mazo.remove(0);
-        else
-            return null;
+        return mazo;
     }
 
     /**
