@@ -116,6 +116,11 @@ public class Carta implements Serializable {
 
     public Image getBackOfCardImage()
     {
-        return new Image(Carta.class.getResourceAsStream("images/back_of_card.png"));
+        try {
+            return new Image(Carta.class.getClassLoader().getResource("images/back_of_card.png").openStream());
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
     }
 }

@@ -11,6 +11,7 @@ package common;
 public class CartaMemory extends Carta {
 
     private boolean emparejada;
+    private boolean girada;
 
     public CartaMemory(String palo, String cara) {
         super(palo, cara);
@@ -35,4 +36,13 @@ public class CartaMemory extends Carta {
                 && (this.getCara().equals(otraCarta.getCara())));
     }
 
+    public boolean isGirada() {
+        return girada;
+    }
+
+    public void setGirada(boolean girada) {
+        this.girada = girada;
+    }
+
+    
 }
