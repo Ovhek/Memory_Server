@@ -5,6 +5,7 @@
 package common;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.util.Duration;
@@ -36,6 +38,8 @@ public class Utils {
 
     private static Media media = null;
     private static MediaPlayer player = null;
+    public static boolean login = false;
+    private static Scene scene;
 
     /**
      * *
@@ -100,6 +104,17 @@ public class Utils {
         alert.setHeaderText(null);
         alert.setContentText("¡Tiempo finalizado!");
         alert.show();
+    }
+    
+    /**
+     * Alerta de aviso de login
+     */
+    public static void alertLogin() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Info");
+        alert.setHeaderText(null);
+        alert.setContentText("¡Debes hacer login antes de seguir en la app!");
+        alert.showAndWait();
     }
 
     /**
