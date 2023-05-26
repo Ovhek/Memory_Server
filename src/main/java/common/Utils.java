@@ -5,6 +5,7 @@
 package common;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +40,6 @@ public class Utils {
     private static Media media = null;
     private static MediaPlayer player = null;
     public static boolean login = false;
-    private static Scene scene;
 
     /**
      * *
@@ -65,13 +65,13 @@ public class Utils {
                 userTransaction.commit();
 
             } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
-                String msg = "Error desant: " + errors.toString();
+                String msg = "Error guardando: " + errors.toString();
                 log.log(Level.INFO, msg);
                 throw new Exception(msg);
             }
 
         } else {
-            String msg = "Errors de validaciÃ³: " + errors.toString();
+            String msg = "Errores de validación: " + errors.toString();
             log.log(Level.INFO, msg);
             throw new Exception(msg);
         }
@@ -80,15 +80,13 @@ public class Utils {
     }
 
     /**
-     * Alerta de confirmaciï¿½n al salir de la app
-     *
-     * @param mensaje
+     * Alerta de confirmación al salir de la app
      */
     public static void alertExit() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Diï¿½logo de confirmaciï¿½n...");
+        alert.setTitle("Diálogo de confirmación");
         alert.setHeaderText(null);
-        alert.setContentText("ï¿½Deseas salir del juego?");
+        alert.setContentText("¿Deseas salir del juego?");
 
         Optional<ButtonType> resultado = alert.showAndWait();
         if (resultado.isPresent()) {
@@ -98,11 +96,14 @@ public class Utils {
         }
     }
     
+    /**
+     * Alerta de aviso de tiempo acabado
+     */
     public static void alertTime() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Info");
         alert.setHeaderText(null);
-        alert.setContentText("ï¿½Tiempo finalizado!");
+        alert.setContentText("¡Tiempo finalizado!");
         alert.show();
     }
     
@@ -113,12 +114,12 @@ public class Utils {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Info");
         alert.setHeaderText(null);
-        alert.setContentText("ï¿½Debes hacer login antes de seguir en la app!");
+        alert.setContentText("¡Debes hacer login antes de seguir en la app!");
         alert.showAndWait();
     }
 
     /**
-     * Obtener dï¿½a y hora actual con formato EU
+     * Obtener día y hora actual con formato EU
      *
      * @return String
      */
@@ -129,19 +130,14 @@ public class Utils {
     }
     
     /**
-     * Reproducir la mï¿½sica de fondo del juego indefinidamente
+     * Reproducir la música de fondo del juego indefinidamente
      */
     public static void playMusic() {
         
-        // Ruta del archivo mp3
-        String path = "src/main/resources/logica/music/soundtrack.mp3";
-        //String path = "http://server/soundtrack.mp3";
+        // Cogemos la ruta del archivo mp3
+        var musicResource = Utils.class.getClassLoader().getResource("logica/music/soundtrack.mp3");
 
         try {
-            // Instanciar el archivo mp3 a travï¿½s de la ruta
-            File audio = new File(path);
-
-            var musicResource = Utils.class.getClassLoader().getResource("logica/music/soundtrack.mp3");
             // Actualizamos el recurso MP3
             media = new Media(musicResource.toURI().toString());
 
@@ -149,17 +145,18 @@ public class Utils {
             player = new MediaPlayer(media);
 
             // Configuraciones adicionales del reproductor
-            player.setCycleCount(MediaPlayer.INDEFINITE); // Repetir la mï¿½sica de fondo indefinidamente
+            player.setCycleCount(MediaPlayer.INDEFINITE); // Repetir la música de fondo indefinidamente
             player.setVolume(0.25); // Volumen (0.0 - 1.0)
             player.setStartTime(Duration.ZERO); // Iniciar desde el principio
             
-            // Reproducir la mï¿½sica
+            // Reproducir la música
             player.play();
 
-        } catch (Exception e) {
-
-            System.out.println("ERROR abriendo el fichero: " + path + ":" + e.toString());
+        } catch (URISyntaxException e) {
+            System.out.println("ERROR abriendo el fichero: " + musicResource + ":" + e.toString());
         }
     }
+    
+    
     
 }
