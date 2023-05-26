@@ -133,6 +133,14 @@ public class JuegoEJB implements IJuego {
 
     @Override
     public Jugador registrarUsuario(Jugador jugador) throws Exception {
+        
+        if ((jugador.getEmail() == null || jugador.getEmail().isBlank() || jugador.getEmail().isEmpty())
+                || (jugador.getNombre() == null || jugador.getNombre().isBlank() || jugador.getNombre().isEmpty())) {
+            String msg = "El formato del nombre o email no es válido";
+            log.log(Level.WARNING, msg);
+            throw new JugadorException(msg);
+        }
+        
         Jugador j = null;
         try {
             String consulta = "SELECT j FROM Jugador j WHERE j.email = :email";
