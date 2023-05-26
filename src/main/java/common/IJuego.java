@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 import javax.ejb.Remote;
 
 /**
- *
+ * Interfaz del juego.
  * @author alexandru
  */
 @Remote

@@ -17,7 +17,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 /**
- * 
+ * Entidad que representa al jugador.
  * @author Alexandru
  */
 @Entity
@@ -42,6 +42,11 @@ public class Jugador implements Serializable {
     public Jugador() {
     }
 
+    /**
+     * Crea un jugador con un nombre y email.
+     * @param nombre 
+     * @param email 
+     */
     public Jugador(String nombre, String email) {
         this.nombre = nombre;
         this.email = email;

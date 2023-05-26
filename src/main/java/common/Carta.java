@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 import javafx.scene.image.Image;
 
 /**
- *
+ * Función que representa una carta.
  * @author Alexandru
  */
 public class Carta implements Serializable {
@@ -34,10 +34,19 @@ public class Carta implements Serializable {
         this.cara = cara;
     }
 
+    /**
+     * Obtiene el palo de la carta
+     * @return palo de la carta
+     */
     public String getPalo() {
         return palo;
     }
 
+    /**
+     * Establece el palo de la carta
+     * @param palo string que representa el palo
+     * @throws CartaException si el palo no es válido devuelve una excepción.
+     */
     public void setPalo(String palo) throws CartaException {
         palo = palo.toLowerCase();
         if (getPalosValidos().contains(palo)) {
@@ -48,11 +57,16 @@ public class Carta implements Serializable {
 
     }
 
+    /**
+     * Obtiene la cara de la carta
+     * @return cara de la carta
+     */
     public String getCara() {
         return cara;
     }
 
     /**
+     * Establece la cara de la carta
      * caras válidas:
      * "2","3","4","5","6","7","8","9","10","jack","queen","king","ace"
      *
@@ -67,20 +81,36 @@ public class Carta implements Serializable {
         }
     }
 
+    /**
+     * Obtiene los palos validos
+     * @return lista de strings que representa los palos validos.
+     */
     public static List<String> getPalosValidos() {
         return Arrays.asList("hearts","diamonds","clubs","spades");
     }
     
+    /**
+     * Obtiene las caras validas
+     * @return lista de strings con las caras validas.
+     */
     public static List<String> getCarasValidas()
     {
         return Arrays.asList("2","3","4","5","6","7","8","9","10","jack","queen","king","ace");
     }
 
+    /**
+     * Convierte la carta a string.
+     * @return 
+     */
     public String toString()
     {
         return cara + " of " + palo;
     }
 
+    /**
+     * Obtiene el color de la carta
+     * @return string que representa el color de la carta.
+     */
     public String getColour()
     {
         if (cara.equals("hearts") || palo.equals("diamonds"))
@@ -94,7 +124,7 @@ public class Carta implements Serializable {
      * [ "2","3","4","5","6","7","8","9","10","jack","queen","king","ace" ]
      *   0    1   2   3   4  ....                              11    12
      *   +2
-     *
+     * @return valor de la carta
      */
     public int getValue()
     {
@@ -102,7 +132,8 @@ public class Carta implements Serializable {
     }
 
     /**
-     * This method will return an Image that represents the Card
+     * Obtiene la imagen de la carta
+     * @return imagen de la carta
      */
     public Image getImage()
     {       
@@ -114,6 +145,10 @@ public class Carta implements Serializable {
         return null;
     }
 
+    /**
+     * Obtiene la imagen trasera de la carta
+     * @return Imagen de la parte trasera
+     */
     public Image getBackOfCardImage()
     {
         try {

@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
+ * Clase que representa el mazo de cartas.
  * @author Alexandru
  */
 public class MazoDeCartas implements Serializable {
@@ -21,6 +21,10 @@ public class MazoDeCartas implements Serializable {
     private ArrayList<CartaMemory> mazo;
 
     int contador = 0;
+    
+    /**
+     * Inicializa el mazo de cartas y genera 13 cartas únicas + sus pares.
+     */
     public MazoDeCartas() {
         this.mazo = new ArrayList<>();
         List<String> suits = Carta.getPalosValidos();
@@ -47,9 +51,8 @@ public class MazoDeCartas implements Serializable {
     }
 
     /**
-     * obtiene la primera carta del mazo
-     * If the deck is empty, it will return null
-     * @return 
+     * Devuelve la lista de cartas
+     * @return lista de cartas.
      */
     public List<CartaMemory> getCartas()
     {
@@ -58,7 +61,7 @@ public class MazoDeCartas implements Serializable {
 
     /**
      * Devuelve el número de cartas-
-     * @return 
+     * @return obtiene el numero de cartas.
      */
     public int getNumeroCartas()
     {

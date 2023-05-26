@@ -296,7 +296,24 @@ public class JuegoEJB implements IJuego {
         int intentos = partidaActual.getNumIntentos();
         int segundos = partidaActual.getTiempoRestante();
         
-        puntos = (80 - intentos) * (300 - segundos);
+        int maxTiempo = 300;
+        switch (maxTiempo) {
+            case 0:
+                maxTiempo = 300;
+                break;
+            case 1:
+                maxTiempo = 200;
+                break;
+            case 2:
+                maxTiempo = 100;
+                break;
+            default:
+                throw new AssertionError();
+        }
+        
+        puntos = (80 - intentos) * (maxTiempo - segundos);
+        
+        if(derrota) 
         
         puntos = Math.max(puntos, 0);
         
