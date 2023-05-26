@@ -128,7 +128,7 @@ public class JuegoEJB implements IJuego {
     @Remove
     @Override
     public void cerrarSesion() {
-        log.log(Level.INFO, "Sesi√≥n finalizada: " + this.emailUsuario);
+        log.log(Level.INFO, "SesiÛn finalizada: " + this.emailUsuario);
     }
 
     @Override
@@ -136,7 +136,7 @@ public class JuegoEJB implements IJuego {
         
         if ((jugador.getEmail() == null || jugador.getEmail().isBlank() || jugador.getEmail().isEmpty())
                 || (jugador.getNombre() == null || jugador.getNombre().isBlank() || jugador.getNombre().isEmpty())) {
-            String msg = "El formato del nombre o email no es v√°lido";
+            String msg = "El formato del nombre o email no es v·lido";
             log.log(Level.WARNING, msg);
             throw new JugadorException(msg);
         }
