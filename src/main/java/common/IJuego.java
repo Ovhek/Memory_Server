@@ -95,4 +95,16 @@ public interface IJuego {
      * @return tiempo actual de la partida.
      */
     public int obtenerTiempoPartida();
+    
+    /**
+     * Comprueba si se ha ganado.
+     * @return si se ha ganado o no.
+     */
+    public boolean comprobarVictoria();
+    
+    /**
+     * Comprueba si se ha perdido.
+     * @return si se ha perdido o no.
+     */
+    public boolean comprobarDerrota();
 }
