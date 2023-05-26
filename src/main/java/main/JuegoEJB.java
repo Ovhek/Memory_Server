@@ -71,6 +71,8 @@ public class JuegoEJB implements IJuego {
     private CartaMemory carta2 = null;
     private boolean primerVolteo = true;
     private boolean victoria = false;
+    private boolean derrota = false;
+    private MazoDeCartas mazo;
     
     // Injecció d'un EJB local. En aquest cas no cal fer lookup.
     @EJB
@@ -176,6 +178,13 @@ public class JuegoEJB implements IJuego {
     @Override
     public Partida empezarPartida(Partida partida) throws PartidaException {
         Partida p = null;
+        partidaActual = null;
+        carta1 = null;
+        carta2 = null;
+        primerVolteo = true;
+        victoria = false;
+        derrota = false;
+        
         switch (partida.getDificultad()) {
             case 0:
                 partida.setTiempoRestante(300);
@@ -221,7 +230,7 @@ public class JuegoEJB implements IJuego {
 
     @Override
     public MazoDeCartas obtenerMazoMezclado() {
-        MazoDeCartas mazo = new MazoDeCartas();
+        mazo = new MazoDeCartas();
         mazo.mezclar();
         return mazo;
     }
@@ -231,7 +240,14 @@ public class JuegoEJB implements IJuego {
         if (carta1 == null || carta2 == null) {
             return false;
         }
-        return carta1.isMismaCarta(carta2);
+        boolean coinciden = carta1.isMismaCarta(carta2);
+        if(coinciden){
+            carta1.setMatched(true);
+            carta2.setMatched(true);
+            carta1 = null;
+            carta2 = null;
+        }
+        return coinciden;
     }
 
     @Override
@@ -294,11 +310,26 @@ public class JuegoEJB implements IJuego {
         if(tiempoActual > 0){
             partidaActual.setTiempoRestante(tiempoActual-1);
         }
+        else{
+            derrota = true;
+        }
         System.out.println("Tiempo actualizado: " + tiempoActual);
     }
     
     @Override
     public int obtenerTiempoPartida(){
         return partidaActual.getTiempoRestante();
+    }
+    
+    @Override
+    public boolean comprobarVictoria(){
+        victoria = mazo.getCartas().stream().allMatch(carta -> carta.isEmparejada() == true);
+        
+        return victoria;
+    }
+    
+    @Override
+    public boolean comprobarDerrota(){        
+        return derrota;
     }
 }
