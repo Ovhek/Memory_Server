@@ -157,6 +157,27 @@ public class Utils {
         }
     }
     
-    
+    /**
+     * A partir de segundos, formatear en minutos y segundos
+     * @param seconds
+     * @return 
+     */
+    public static String formatTime(int seconds) {
+        int minutes = seconds / 60;
+        int segundosRestantes = seconds % 60;
+        return String.format("%02d:%02d", minutes, segundosRestantes);
+    }
+
+    /**
+     * A partir de milisegundos, formatear en minutos, segundos y milisegundos
+     * @param milliseconds
+     * @return 
+     */
+    public static String formatTimeMillis(int milliseconds) {
+        int minutes = (milliseconds / 1000) / 60;
+        int seconds = (milliseconds / 1000) % 60;
+        int millis = milliseconds % 1000;
+        return String.format("%02d:%02d:%03d", minutes, seconds, millis);
+    }
     
 }
