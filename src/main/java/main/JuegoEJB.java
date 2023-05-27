@@ -36,8 +36,8 @@ import javax.transaction.UserTransaction;
 
 /**
  * *
- * Classe Stateful, que manté l'estat de les dades entre diverses crides als
- * seus métodes.
+ * Classe Stateful, que mantï¿½ l'estat de les dades entre diverses crides als
+ * seus mï¿½todes.
  *
  * @author manel
  */
@@ -75,7 +75,7 @@ public class JuegoEJB implements IJuego {
     private MazoDeCartas mazo;
     private Timer timer;
 
-    // Injecció d'un EJB local. En aquest cas no cal fer lookup.
+    // Injecciï¿½ d'un EJB local. En aquest cas no cal fer lookup.
     @EJB
     AppSingletonEJB singleton;
 
@@ -106,7 +106,7 @@ public class JuegoEJB implements IJuego {
     public Jugador getSesion(Jugador j) throws JugadorException {
         if ((j.getEmail() == null || j.getEmail().isBlank() || j.getEmail().isEmpty())
                 || (j.getNombre() == null || j.getNombre().isBlank() || j.getNombre().isEmpty())) {
-            String msg = "El formato del nombre o email no es válido";
+            String msg = "El formato del nombre o email no es vï¿½lido";
             log.log(Level.WARNING, msg);
             throw new JugadorException(msg);
         }
@@ -129,7 +129,7 @@ public class JuegoEJB implements IJuego {
     @Remove
     @Override
     public void cerrarSesion() {
-        log.log(Level.INFO, "Sesión finalizada: " + this.emailUsuario);
+        log.log(Level.INFO, "Sesiï¿½n finalizada: " + this.emailUsuario);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class JuegoEJB implements IJuego {
 
         if ((jugador.getEmail() == null || jugador.getEmail().isBlank() || jugador.getEmail().isEmpty())
                 || (jugador.getNombre() == null || jugador.getNombre().isBlank() || jugador.getNombre().isEmpty())) {
-            String msg = "El formato del nombre o email no es válido";
+            String msg = "El formato del nombre o email no es vï¿½lido";
             log.log(Level.WARNING, msg);
             throw new JugadorException(msg);
         }
@@ -300,13 +300,14 @@ public class JuegoEJB implements IJuego {
 
     @Override
     public List<Partida> getHallOfGame() throws Exception {
-        TypedQuery<Partida> query = em.createQuery("SELECT DISTINCT p.jugador.id FROM Partida p ORDER BY p.puntos DESC", Partida.class);
+        TypedQuery<Partida> query = em.createQuery("SELECT p FROM Partida p WHERE p.id IN (SELECT MAX(p2.id) FROM Partida p2 GROUP BY p2.jugador.id) ORDER BY p.puntos DESC", Partida.class);
         return query.getResultList();
     }
     
     @Override
     public List<Partida> getHallOfGame(int dificultad) throws Exception {
-        TypedQuery<Partida> query = em.createQuery("SELECT DISTINCT p.jugador.id FROM Partida p WHERE p.dificultad = dificultad BY p.puntos DESC", Partida.class);
+        TypedQuery<Partida> query = em.createQuery("SELECT p FROM Partida p WHERE p.id IN (SELECT MAX(p2.id) FROM Partida p2 WHERE p2.dificultad = :dificultad GROUP BY p2.jugador.id) ORDER BY p.puntos DESC", Partida.class);
+        query.setParameter("dificultad", dificultad);
         return query.getResultList();
     }
 

@@ -176,4 +176,10 @@ public class Partida implements Serializable {
         this.puntos = puntos;
     }
 
+    @Override
+    public String toString() {
+        return jugador.getNombre() + "" + " puntuación: " + puntos;
+    }
+
+    
 }

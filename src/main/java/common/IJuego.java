@@ -92,7 +92,7 @@ public interface IJuego {
     public List<Partida> getHallOfGame() throws Exception;
     
     /**
-     * Función encargada de obtener el salón de la fama según la dificultad.
+     * Funciï¿½n encargada de obtener el salï¿½n de la fama segï¿½n la dificultad.
      * @param dificultad
      * @return lista de partidas ordenadas de mayor a menor
      * @throws java.lang.Exception
