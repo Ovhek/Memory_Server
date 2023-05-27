@@ -40,6 +40,7 @@ public class Utils {
     private static Media media = null;
     private static MediaPlayer player = null;
     public static boolean login = false;
+    public static int dificultad;
 
     /**
      * *

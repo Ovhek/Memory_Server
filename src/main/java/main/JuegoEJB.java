@@ -290,6 +290,12 @@ public class JuegoEJB implements IJuego {
         TypedQuery<Partida> query = em.createQuery("SELECT DISTINCT p.jugador.id FROM Partida p ORDER BY p.puntos DESC", Partida.class);
         return query.getResultList();
     }
+    
+    @Override
+    public List<Partida> getHallOfGame(int dificultad) throws Exception {
+        TypedQuery<Partida> query = em.createQuery("SELECT DISTINCT p.jugador.id FROM Partida p WHERE p.dificultad = dificultad BY p.puntos DESC", Partida.class);
+        return query.getResultList();
+    }
 
     private int calcularPuntos() {
         int puntos = 0;

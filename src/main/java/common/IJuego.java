@@ -91,6 +91,12 @@ public interface IJuego {
     public List<Partida> getHallOfGame() throws Exception;
     
     /**
+     * Función encargada de obtener el salón de la fama según la dificultad.
+     * @return lista de partidas ordenadas de mayor a menor
+     */
+    public List<Partida> getHallOfGame(int dificultad) throws Exception;
+    
+    /**
      * Obtiene el tiempo actual de la partida
      * @return tiempo actual de la partida.
      */
