@@ -171,7 +171,7 @@ public class JuegoEJB implements IJuego {
         }
 
         partidaActual.setPuntos(calcularPuntos());
-        Partida p = (Partida) Utils.persisteixAmbTransaccio(partidaActual, userTransaction, em, log);
+        Partida p = (Partida) Utils.actualizaAmbTransaccio(partidaActual, userTransaction, em, log);
 
         partidaActual = null;
         timer.cancel();
