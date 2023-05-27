@@ -17,7 +17,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.image.Image;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
@@ -37,8 +36,8 @@ import javax.transaction.UserTransaction;
 
 /**
  * *
- * Classe Stateful, que mantÃ© l'estat de les dades entre diverses crides als
- * seus mÃ¨todes.
+ * Classe Stateful, que manté l'estat de les dades entre diverses crides als
+ * seus métodes.
  *
  * @author manel
  */
@@ -76,7 +75,7 @@ public class JuegoEJB implements IJuego {
     private MazoDeCartas mazo;
     private Timer timer;
 
-    // InjecciÃ³ d'un EJB local. En aquest cas no cal fer lookup.
+    // Injecció d'un EJB local. En aquest cas no cal fer lookup.
     @EJB
     AppSingletonEJB singleton;
 
@@ -107,7 +106,7 @@ public class JuegoEJB implements IJuego {
     public Jugador getSesion(Jugador j) throws JugadorException {
         if ((j.getEmail() == null || j.getEmail().isBlank() || j.getEmail().isEmpty())
                 || (j.getNombre() == null || j.getNombre().isBlank() || j.getNombre().isEmpty())) {
-            String msg = "El formato del nombre o email no es vÃ¡lido";
+            String msg = "El formato del nombre o email no es válido";
             log.log(Level.WARNING, msg);
             throw new JugadorException(msg);
         }
@@ -130,7 +129,7 @@ public class JuegoEJB implements IJuego {
     @Remove
     @Override
     public void cerrarSesion() {
-        log.log(Level.INFO, "Sesiï¿½n finalizada: " + this.emailUsuario);
+        log.log(Level.INFO, "Sesión finalizada: " + this.emailUsuario);
     }
 
     @Override
@@ -138,7 +137,7 @@ public class JuegoEJB implements IJuego {
 
         if ((jugador.getEmail() == null || jugador.getEmail().isBlank() || jugador.getEmail().isEmpty())
                 || (jugador.getNombre() == null || jugador.getNombre().isBlank() || jugador.getNombre().isEmpty())) {
-            String msg = "El formato del nombre o email no es vï¿½lido";
+            String msg = "El formato del nombre o email no es válido";
             log.log(Level.WARNING, msg);
             throw new JugadorException(msg);
         }

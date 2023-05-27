@@ -6,7 +6,6 @@
 package common;
 
 import java.util.List;
-import javafx.scene.image.Image;
 import javax.ejb.Remote;
 
 /**
@@ -39,6 +38,7 @@ public interface IJuego {
     
     /***
      * empieza una partida
+     * @param partida
      * @return La partida comenzada
      * @throws common.PartidaException si la partida esta llena.
      */
@@ -53,7 +53,7 @@ public interface IJuego {
     
     /***
      * Termina una partida
-     * @param partida
+     * @return 
      * @throws common.PartidaException si la partida ya estÃ¡ terminada.
      */
     public Partida terminarPartida() throws Exception;
@@ -87,12 +87,15 @@ public interface IJuego {
     /**
      * FunciÃ³n encargada de obtener el salÃ³n de la fama.
      * @return lista de partidas ordenadas de mayor a menor
+     * @throws java.lang.Exception
      */
     public List<Partida> getHallOfGame() throws Exception;
     
     /**
      * Función encargada de obtener el salón de la fama según la dificultad.
+     * @param dificultad
      * @return lista de partidas ordenadas de mayor a menor
+     * @throws java.lang.Exception
      */
     public List<Partida> getHallOfGame(int dificultad) throws Exception;
     
