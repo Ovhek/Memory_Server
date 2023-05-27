@@ -311,7 +311,7 @@ public class JuegoEJB implements IJuego {
         int segundos = partidaActual.getTiempoRestante();
 
         int maxTiempo = 300;
-        switch (maxTiempo) {
+        switch (partidaActual.getDificultad()) {
             case 0:
                 maxTiempo = 300;
                 break;
