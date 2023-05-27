@@ -327,8 +327,10 @@ public class JuegoEJB implements IJuego {
 
         puntos = (80 - intentos) * (maxTiempo - segundos);
 
+        puntos = Math.max(puntos, 0);
+        
         if (derrota) {
-            puntos = Math.max(puntos, 0);
+            puntos = 0;
         }
 
         return puntos;
