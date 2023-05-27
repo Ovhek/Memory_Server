@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 import javax.ejb.Remote;
 
 /**
- *
+ * Interfaz del juego.
  * @author alexandru
  */
 @Remote
@@ -82,7 +82,7 @@ public interface IJuego {
      * @param carta carta a voltear
      * @return 
      */
-    public Image voltearCarta(CartaMemory carta);
+    public byte[] voltearCarta(CartaMemory carta);
     
     /**
      * Función encargada de obtener el salón de la fama.

@@ -8,6 +8,7 @@ import common.MazoDeCartas;
 import common.Partida;
 import common.PartidaException;
 import common.Utils;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class JuegoEJB implements IJuego {
 
     @Resource
     private UserTransaction userTransaction;
-    
+
     private String emailUsuario = null;
     private Partida partidaActual = null;
     private CartaMemory carta1 = null;
@@ -73,7 +74,8 @@ public class JuegoEJB implements IJuego {
     private boolean victoria = false;
     private boolean derrota = false;
     private MazoDeCartas mazo;
-    
+    private Timer timer;
+
     // InjecciÃ³ d'un EJB local. En aquest cas no cal fer lookup.
     @EJB
     AppSingletonEJB singleton;
@@ -128,19 +130,19 @@ public class JuegoEJB implements IJuego {
     @Remove
     @Override
     public void cerrarSesion() {
-        log.log(Level.INFO, "Sesión finalizada: " + this.emailUsuario);
+        log.log(Level.INFO, "Sesiï¿½n finalizada: " + this.emailUsuario);
     }
 
     @Override
     public Jugador registrarUsuario(Jugador jugador) throws Exception {
-        
+
         if ((jugador.getEmail() == null || jugador.getEmail().isBlank() || jugador.getEmail().isEmpty())
                 || (jugador.getNombre() == null || jugador.getNombre().isBlank() || jugador.getNombre().isEmpty())) {
-            String msg = "El formato del nombre o email no es válido";
+            String msg = "El formato del nombre o email no es vï¿½lido";
             log.log(Level.WARNING, msg);
             throw new JugadorException(msg);
         }
-        
+
         Jugador j = null;
         try {
             String consulta = "SELECT j FROM Jugador j WHERE j.email = :email";
@@ -169,9 +171,10 @@ public class JuegoEJB implements IJuego {
         }
 
         partidaActual.setPuntos(calcularPuntos());
-        Partida p = (Partida)Utils.persisteixAmbTransaccio(partidaActual, userTransaction, em, log);
+        Partida p = (Partida) Utils.actualizaAmbTransaccio(partidaActual, userTransaction, em, log);
 
         partidaActual = null;
+        timer.cancel();
         return p;
     }
 
@@ -184,7 +187,7 @@ public class JuegoEJB implements IJuego {
         primerVolteo = true;
         victoria = false;
         derrota = false;
-        
+
         switch (partida.getDificultad()) {
             case 0:
                 partida.setTiempoRestante(300);
@@ -207,17 +210,17 @@ public class JuegoEJB implements IJuego {
             throw new PartidaException(msg);
         }
         partidaActual = p;
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask(){
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
-            public void run(){
+            public void run() {
                 try {
                     actualizarTiempoPartida();
                 } catch (PartidaException ex) {
-                   log.log(Level.WARNING, ex.getMessage());
+                    log.log(Level.WARNING, ex.getMessage());
                 }
             }
-        }, 1000,1000);
+        }, 1000, 1000);
         return p;
     }
 
@@ -241,7 +244,7 @@ public class JuegoEJB implements IJuego {
             return false;
         }
         boolean coinciden = carta1.isMismaCarta(carta2);
-        if(coinciden){
+        if (coinciden) {
             carta1.setMatched(true);
             carta2.setMatched(true);
             carta1 = null;
@@ -262,9 +265,14 @@ public class JuegoEJB implements IJuego {
     }
 
     @Override
-    public Image voltearCarta(CartaMemory carta) {
+    public byte[] voltearCarta(CartaMemory carta) {
         if (carta.isEmparejada()) {
-            return carta.getImage();
+            try {
+                return carta.getImage();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                log.log(Level.SEVERE, "error imagenes: " + ex.getMessage());
+            }
         }
         carta.setGirada(!carta.isGirada());
 
@@ -282,7 +290,13 @@ public class JuegoEJB implements IJuego {
             }
         }
         primerVolteo = !primerVolteo;
-        return carta.isGirada() ? carta.getBackOfCardImage() : carta.getImage();
+        try {
+            return carta.isGirada() ? carta.getImage() : carta.getBackOfCardImage();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            log.log(Level.SEVERE, "error imagenes: " + ex.getMessage());
+            return null;
+        }
     }
 
     @Override
@@ -301,41 +315,61 @@ public class JuegoEJB implements IJuego {
         int puntos = 0;
         int intentos = partidaActual.getNumIntentos();
         int segundos = partidaActual.getTiempoRestante();
-        
-        puntos = (80 - intentos) * (300 - segundos);
-        
+
+        int maxTiempo = 300;
+        switch (partidaActual.getDificultad()) {
+            case 0:
+                maxTiempo = 300;
+                break;
+            case 1:
+                maxTiempo = 200;
+                break;
+            case 2:
+                maxTiempo = 100;
+                break;
+            default:
+                throw new AssertionError();
+        }
+
+        puntos = (80 - intentos) * (maxTiempo - segundos);
+
         puntos = Math.max(puntos, 0);
         
+        if (derrota) {
+            puntos = 0;
+        }
+
         return puntos;
     }
 
-    private void actualizarTiempoPartida() throws PartidaException{
-        if(partidaActual == null) return;
-        int tiempoActual = partidaActual.getTiempoRestante();
-        
-        if(tiempoActual > 0){
-            partidaActual.setTiempoRestante(tiempoActual-1);
+    private void actualizarTiempoPartida() throws PartidaException {
+        if (partidaActual == null) {
+            return;
         }
-        else{
+        int tiempoActual = partidaActual.getTiempoRestante();
+
+        if (tiempoActual > 0) {
+            partidaActual.setTiempoRestante(tiempoActual - 1);
+        } else {
             derrota = true;
         }
         System.out.println("Tiempo actualizado: " + tiempoActual);
     }
-    
+
     @Override
-    public int obtenerTiempoPartida(){
+    public int obtenerTiempoPartida() {
         return partidaActual.getTiempoRestante();
     }
-    
+
     @Override
-    public boolean comprobarVictoria(){
+    public boolean comprobarVictoria() {
         victoria = mazo.getCartas().stream().allMatch(carta -> carta.isEmparejada() == true);
-        
+
         return victoria;
     }
-    
+
     @Override
-    public boolean comprobarDerrota(){        
+    public boolean comprobarDerrota() {
         return derrota;
     }
 }

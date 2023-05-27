@@ -6,11 +6,15 @@
 package common;
 
 /**
- *
+ * Función encargada de las excepciones 
  * @author Alexandru
  */
 public class CartaException extends Exception {
 
+    /**
+     * Constructor de la excepción
+     * @param s mensaje de la excepción
+     */
     public CartaException(String s) {
         super(s);
     }

@@ -23,6 +23,11 @@ public class Lookups {
     
     private static final String appName = "Server_Memory-" + APP_VERSION;
     
+    /**
+     * Remote Lookup Del EJB del juego.
+     * @return devuelve el lookup al EJB.
+     * @throws NamingException excepción en caso de que el ejb no exista.
+     */
     public static IJuego juegoEJBRemoteLookup() throws NamingException
     {
         // "/EJB_Exemple1_Server-1/CarroCompraEJB!common.ICarroCompra?stateful"

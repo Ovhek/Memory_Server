@@ -6,11 +6,15 @@
 package common;
 
 /**
- *
- * @author manel
+ * Clase que representa una excepción por parte del jugador.
+ * @author Alexandru
  */
 public class JugadorException extends Exception {
 
+    /**
+     * Constructor de la excepción del jugador
+     * @param s mensaje de la excepción.
+     */
     public JugadorException(String s) {
         super(s);
     }

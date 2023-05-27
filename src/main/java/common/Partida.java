@@ -16,7 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 /**
- * 
+ * Entidad que representa una partida.
  * @author Alexandru
  */
 @Entity
@@ -51,6 +51,11 @@ public class Partida implements Serializable {
     public Partida() {
     }
 
+    /**
+     * Construye una partida según un jugador y la dificultad
+     * @param jugador el jugador
+     * @param dificultad la dificultad
+     */
     public Partida(Jugador jugador, int dificultad) {
         this.jugador = jugador;
         this.partidaFinalizada = false;
@@ -59,58 +64,114 @@ public class Partida implements Serializable {
         this.puntos = 0;
     }
 
+    /**
+     * Obtiene el id de la partida
+     * @return 
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Setea el id de la carta;
+     * @param id 
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * Devuelve el jugador.
+     * @return devuelve el jugador.
+     */
     public Jugador getJugador() {
         return jugador;
     }
 
+    /**
+     * Establece el jugador.
+     * @param jugador jugador a establecer.
+     */
     public void setJugador(Jugador jugador) {
         this.jugador = jugador;
     }
 
+    /**
+     * Devuelve el valor de partidaFinalizada.
+     * @return valor de partidaFinalizada.
+     */
     public boolean isPartidaFinalizada() {
         return partidaFinalizada;
     }
 
+    /**
+     * Establece la partida finalizada.
+     * @param partidaFinalizada valor de la partida.
+     */
     public void setPartidaFinalizada(boolean partidaFinalizada) {
         this.partidaFinalizada = partidaFinalizada;
     }
 
+    /**
+     * Obtiene el valor de la variable dificultad.
+     * @return el valor de la dificultad.
+     */
     public int getDificultad() {
         return dificultad;
     }
 
+    /**
+     * Establece la dificultad
+     * @param dificultad la dificultad
+     */
     public void setDificultad(int dificultad) {
         this.dificultad = dificultad;
     }
 
+    /**
+     * Obtiene el numero de intentos
+     * @return numero de intentos.
+     */
     public int getNumIntentos() {
         return numIntentos;
     }
 
+    /**
+     * Establece el numero de intentos.
+     * @param numIntentos el numero de intentos
+     */
     public void setNumIntentos(int numIntentos) {
         this.numIntentos = numIntentos;
     }
 
+    /**
+     * Obtiene el tiempo restante
+     * @return tiempo restante.
+     */
     public int getTiempoRestante() {
         return tiempoRestante;
     }
 
+    /**
+     * Establece el tiempo restante.
+     * @param tiempoRestante establece el tiempo restante.
+     */
     public void setTiempoRestante(int tiempoRestante) {
         this.tiempoRestante = tiempoRestante;
     }
 
+    /**
+     * Obtiene los puntos.
+     * @return puntos de la partida.
+     */
     public int getPuntos() {
         return puntos;
     }
 
+    /**
+     * Establece los puntos de la partida.
+     * @param puntos puntos de la partida.
+     */
     public void setPuntos(int puntos) {
         this.puntos = puntos;
     }
