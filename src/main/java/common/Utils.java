@@ -126,6 +126,7 @@ public class Utils {
 
         Optional<ButtonType> resultado = alert.showAndWait();
         if (resultado.isPresent()) {
+            // Si confirmas que deseas salir, se cierra el juego
             if (resultado.get() == ButtonType.OK) {
                 Platform.exit();
             }
@@ -196,7 +197,7 @@ public class Utils {
     /**
      * A partir de segundos, formatear en minutos y segundos
      * @param seconds
-     * @return 
+     * @return String (minutos:segundos)
      */
     public static String formatTime(int seconds) {
         int minutes = seconds / 60;
@@ -207,7 +208,7 @@ public class Utils {
     /**
      * A partir de milisegundos, formatear en minutos, segundos y milisegundos
      * @param milliseconds
-     * @return 
+     * @return String (minutos:segundos:milisegundos)
      */
     public static String formatTimeMillis(int milliseconds) {
         int minutes = (milliseconds / 1000) / 60;

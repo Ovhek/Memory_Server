@@ -6,10 +6,8 @@
 package main;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -33,16 +31,16 @@ public class AppSingletonEJB {
     
   
     
-    // versiÃ³ i data del servidor
+    // versió i data del servidor
     private static final String APP_VERSION = "1.0.0";
     private static final String DATE_VERSION = "12/05/2023";
     
     private static final Logger log = Logger.getLogger(AppSingletonEJB.class.getName());
     
-    // darrera actualitzaciÃ³ de la BBDD
+    // darrera actualització de la BBDD
     private Date lastUpdateDBUTC;
     
-    // moment d'inici de l'aplicaciÃ³
+    // moment d'inici de l'aplicació
     private Date uptimeUTC;
     
     @PostConstruct //With this annotation, it'll be called by the container upon instantiation of the bean
@@ -58,7 +56,7 @@ public class AppSingletonEJB {
     }
     
     /***
-     * ObtÃ© el timestamp d'inici de l'aplicaciÃ³
+     * Obté el timestamp d'inici de l'aplicació
      * @return 
      */
     @Lock(LockType.READ)
@@ -68,7 +66,7 @@ public class AppSingletonEJB {
     }
     
     /***
-     * ObtÃ© la darrera data d'actualitzaciÃ³ de la BBDD
+     * Obtiene la última fecha de actualitzación de la BBDD
      * @return 
      */
     @Lock(LockType.READ)
@@ -78,7 +76,7 @@ public class AppSingletonEJB {
     }
 
     /***
-     * Estableix la data d'actualitzaciÃ³ de la BBDD
+     * Establece la fecha de actualitzación de la BBDD
      */
     @Lock(LockType.WRITE)
     public void setLastDBUpdateUTC() {
@@ -88,7 +86,7 @@ public class AppSingletonEJB {
     }
     
     /***
-     * Mostra un banner amb la versiÃ³
+     * Mostra un banner amb la versión
      */
     private void  showLogo()
     { 
@@ -115,7 +113,7 @@ public class AppSingletonEJB {
         
         banner.append(System.lineSeparator());
         banner.append(System.lineSeparator());
-        banner.append("VersiÃ³ del servidor: ").append(AppSingletonEJB.APP_VERSION).append(" de " + AppSingletonEJB.DATE_VERSION);
+        banner.append("Versión del servidor: ").append(AppSingletonEJB.APP_VERSION).append(" de " + AppSingletonEJB.DATE_VERSION);
         banner.append(System.lineSeparator());
             
         log.log(Level.INFO, banner.toString());
