@@ -36,29 +36,29 @@ import javax.transaction.UserTransaction;
 
 /**
  * *
- * Classe Stateful, que mantï¿½ l'estat de les dades entre diverses crides als
- * seus mï¿½todes.
+ * Classe Stateful, que manté l'estat de les dades entre diverses crides als
+ * seus métodes.
  *
  * @author manel
  */
 @Stateful
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER) //Simply put, in container-managed concurrency, the container controls how clients' access to methods
-@TransactionManagement(value = TransactionManagementType.BEAN) // o bÃ© Ã©s el contenidor el que gestiona les transaccions a la BBDD o bÃ© Ã©s el programador/a manualment
+@TransactionManagement(value = TransactionManagementType.BEAN) // o bé és el contenidor el que gestiona les transaccions a la BBDD o bé és el programador/a manualment
 //@TransactionAttribute(TransactionAttributeType.REQUIRED) //https://gerardo.dev/ejb-basics.html
 public class JuegoEJB implements IJuego {
 
     @Resource
     private SessionContext sessionContext;
 
-    // tenim accÃ¨s a la funcionalitat "injectada" al BEAN
+    // tenim accès a la funcionalitat "injectada" al BEAN
     @Resource
     private EJBContext ejbContext;
 
-    // Si utilitzem el entitymanager al llarg de mÃ©s d'un mÃ¨tode, 
-    // la transacciÃ³ es pot extendre al llarg de tot el BEAN i passar de mÃ¨tode a mÃ¨tode
-    // Aquest parÃ metre Ã©s necessÃ ri per a un TransactionManagementType = CONTAINER
-    // Per defecte es fa commit de la transacciÃ³, si s'ha fet un persist, al finalitzar cada mÃ¨tode.
-    // Es fa rollback si abans de sortir del mÃ¨tode, es produeix una excepciÃ³
+    // Si utilitzem el entitymanager al llarg de m// Si utilitzem el entitymanager al llarg de més d'un mètode, 
+    // la transacció es pot extendre al llarg de tot el BEAN i passar de mètode a mètode
+    // Aquest paràmetre és necessàri per a un TransactionManagementType = CONTAINER
+    // Per defecte es fa commit de la transacció, si s'ha fet un persist, al finalitzar cada mètode.
+    // Es fa rollback si abans de sortir del mètode, es produeix una excepció
     @PersistenceContext(unitName = "Exemple1PersistenceUnit", type = PersistenceContextType.EXTENDED)
     private EntityManager em;
 
@@ -75,7 +75,7 @@ public class JuegoEJB implements IJuego {
     private MazoDeCartas mazo;
     private Timer timer;
 
-    // Injecciï¿½ d'un EJB local. En aquest cas no cal fer lookup.
+    // Injecció d'un EJB local. En aquest cas no cal fer lookup.
     @EJB
     AppSingletonEJB singleton;
 
@@ -106,7 +106,7 @@ public class JuegoEJB implements IJuego {
     public Jugador getSesion(Jugador j) throws JugadorException {
         if ((j.getEmail() == null || j.getEmail().isBlank() || j.getEmail().isEmpty())
                 || (j.getNombre() == null || j.getNombre().isBlank() || j.getNombre().isEmpty())) {
-            String msg = "El formato del nombre o email no es vï¿½lido";
+            String msg = "El formato del nombre o email no es válido";
             log.log(Level.WARNING, msg);
             throw new JugadorException(msg);
         }
@@ -129,7 +129,7 @@ public class JuegoEJB implements IJuego {
     @Remove
     @Override
     public void cerrarSesion() {
-        log.log(Level.INFO, "Sesiï¿½n finalizada: " + this.emailUsuario);
+        log.log(Level.INFO, "Sesión finalizada: " + this.emailUsuario);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class JuegoEJB implements IJuego {
 
         if ((jugador.getEmail() == null || jugador.getEmail().isBlank() || jugador.getEmail().isEmpty())
                 || (jugador.getNombre() == null || jugador.getNombre().isBlank() || jugador.getNombre().isEmpty())) {
-            String msg = "El formato del nombre o email no es vï¿½lido";
+            String msg = "El formato del nombre o email no es válido";
             log.log(Level.WARNING, msg);
             throw new JugadorException(msg);
         }

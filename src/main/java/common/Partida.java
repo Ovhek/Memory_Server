@@ -6,53 +6,52 @@
 package common;
 
 import java.io.Serializable;
-import java.sql.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 /**
  * Entidad que representa una partida.
+ *
  * @author Alexandru
  */
 @Entity
 public class Partida implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @ManyToOne
     @JoinColumn(name = "id_jugador")
     private Jugador jugador;
-   
+
     private boolean partidaFinalizada;
-    
+
     private int numIntentos;
-    
+
     private int tiempoRestante;
-    
+
     private int puntos;
-    
+
     /*
-        0  --> FÃ¡cil
+        0  --> Fácil
         1 --> Medio
-        2 --> Dificil
-    */
+        2 --> Difícil
+     */
     private int dificultad;
-    
-    
+
     public Partida() {
     }
 
     /**
-     * Construye una partida segÃºn un jugador y la dificultad
+     * Construye una partida según un jugador y la dificultad
+     *
      * @param jugador el jugador
      * @param dificultad la dificultad
      */
@@ -66,7 +65,8 @@ public class Partida implements Serializable {
 
     /**
      * Obtiene el id de la partida
-     * @return 
+     *
+     * @return
      */
     public Long getId() {
         return id;
@@ -74,7 +74,8 @@ public class Partida implements Serializable {
 
     /**
      * Setea el id de la carta;
-     * @param id 
+     *
+     * @param id
      */
     public void setId(Long id) {
         this.id = id;
@@ -82,6 +83,7 @@ public class Partida implements Serializable {
 
     /**
      * Devuelve el jugador.
+     *
      * @return devuelve el jugador.
      */
     public Jugador getJugador() {
@@ -90,6 +92,7 @@ public class Partida implements Serializable {
 
     /**
      * Establece el jugador.
+     *
      * @param jugador jugador a establecer.
      */
     public void setJugador(Jugador jugador) {
@@ -98,6 +101,7 @@ public class Partida implements Serializable {
 
     /**
      * Devuelve el valor de partidaFinalizada.
+     *
      * @return valor de partidaFinalizada.
      */
     public boolean isPartidaFinalizada() {
@@ -106,6 +110,7 @@ public class Partida implements Serializable {
 
     /**
      * Establece la partida finalizada.
+     *
      * @param partidaFinalizada valor de la partida.
      */
     public void setPartidaFinalizada(boolean partidaFinalizada) {
@@ -114,6 +119,7 @@ public class Partida implements Serializable {
 
     /**
      * Obtiene el valor de la variable dificultad.
+     *
      * @return el valor de la dificultad.
      */
     public int getDificultad() {
@@ -122,6 +128,7 @@ public class Partida implements Serializable {
 
     /**
      * Establece la dificultad
+     *
      * @param dificultad la dificultad
      */
     public void setDificultad(int dificultad) {
@@ -130,6 +137,7 @@ public class Partida implements Serializable {
 
     /**
      * Obtiene el numero de intentos
+     *
      * @return numero de intentos.
      */
     public int getNumIntentos() {
@@ -138,6 +146,7 @@ public class Partida implements Serializable {
 
     /**
      * Establece el numero de intentos.
+     *
      * @param numIntentos el numero de intentos
      */
     public void setNumIntentos(int numIntentos) {
@@ -146,6 +155,7 @@ public class Partida implements Serializable {
 
     /**
      * Obtiene el tiempo restante
+     *
      * @return tiempo restante.
      */
     public int getTiempoRestante() {
@@ -154,6 +164,7 @@ public class Partida implements Serializable {
 
     /**
      * Establece el tiempo restante.
+     *
      * @param tiempoRestante establece el tiempo restante.
      */
     public void setTiempoRestante(int tiempoRestante) {
@@ -162,6 +173,7 @@ public class Partida implements Serializable {
 
     /**
      * Obtiene los puntos.
+     *
      * @return puntos de la partida.
      */
     public int getPuntos() {
@@ -170,6 +182,7 @@ public class Partida implements Serializable {
 
     /**
      * Establece los puntos de la partida.
+     *
      * @param puntos puntos de la partida.
      */
     public void setPuntos(int puntos) {
@@ -178,8 +191,7 @@ public class Partida implements Serializable {
 
     @Override
     public String toString() {
-        return jugador.getNombre() + "" + " puntuaciÃ³n: " + puntos;
+        return jugador.getNombre() + " puntuación: " + puntos;
     }
 
-    
 }
