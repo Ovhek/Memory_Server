@@ -32,10 +32,14 @@ import javafx.scene.media.MediaPlayer;
  * @author alex
  */
 public class Utils {
-
+    // Variables que controlan la reproducción de la música
     private static Media media = null;
     private static MediaPlayer player = null;
+    
+    // Variable que controla si el usuario está logueado
     public static boolean login = false;
+    
+    // Variable que controla la dificultad elegida por el usuario para empezar la partida
     public static int dificultad;
 
     /**
