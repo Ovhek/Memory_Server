@@ -175,6 +175,7 @@ public class JuegoEJB implements IJuego {
 
         partidaActual = null;
         timer.cancel();
+        victoria = false;
         return p;
     }
 
@@ -241,6 +242,7 @@ public class JuegoEJB implements IJuego {
         if (carta1 == null || carta2 == null) {
             return false;
         }
+        
         boolean coinciden = carta1.isMismaCarta(carta2);
         if (coinciden) {
             carta1.setMatched(true);
@@ -254,7 +256,7 @@ public class JuegoEJB implements IJuego {
         if (partidaActual == null) {
             throw new PartidaException("NO existe partida actual");
         }
-        partidaActual.setNumIntentos(partidaActual.getNumIntentos());
+        partidaActual.setNumIntentos(partidaActual.getNumIntentos()+1);
         Utils.persisteixAmbTransaccio(partidaActual, userTransaction, em, log);
 
         return partidaActual.getNumIntentos();
