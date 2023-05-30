@@ -22,6 +22,7 @@ public class Carta implements Serializable {
     private String palo;
 
     private String cara;
+    
 
     public Carta() {
     }
@@ -30,6 +31,7 @@ public class Carta implements Serializable {
         this.palo = palo;
         this.cara = cara;
     }
+
 
     /**
      * Obtiene el palo de la carta

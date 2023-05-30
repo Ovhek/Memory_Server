@@ -36,29 +36,29 @@ import javax.transaction.UserTransaction;
 
 /**
  * *
- * Classe Stateful, que manté l'estat de les dades entre diverses crides als
- * seus métodes.
+ * Classe Stateful, que mantï¿½ l'estat de les dades entre diverses crides als
+ * seus mï¿½todes.
  *
  * @author manel
  */
 @Stateful
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER) //Simply put, in container-managed concurrency, the container controls how clients' access to methods
-@TransactionManagement(value = TransactionManagementType.BEAN) // o bé és el contenidor el que gestiona les transaccions a la BBDD o bé és el programador/a manualment
+@TransactionManagement(value = TransactionManagementType.BEAN) // o bï¿½ ï¿½s el contenidor el que gestiona les transaccions a la BBDD o bï¿½ ï¿½s el programador/a manualment
 //@TransactionAttribute(TransactionAttributeType.REQUIRED) //https://gerardo.dev/ejb-basics.html
 public class JuegoEJB implements IJuego {
 
     @Resource
     private SessionContext sessionContext;
 
-    // tenim accès a la funcionalitat "injectada" al BEAN
+    // tenim accï¿½s a la funcionalitat "injectada" al BEAN
     @Resource
     private EJBContext ejbContext;
 
-    // Si utilitzem el entitymanager al llarg de m// Si utilitzem el entitymanager al llarg de més d'un mètode, 
-    // la transacció es pot extendre al llarg de tot el BEAN i passar de mètode a mètode
-    // Aquest paràmetre és necessàri per a un TransactionManagementType = CONTAINER
-    // Per defecte es fa commit de la transacció, si s'ha fet un persist, al finalitzar cada mètode.
-    // Es fa rollback si abans de sortir del mètode, es produeix una excepció
+    // Si utilitzem el entitymanager al llarg de m// Si utilitzem el entitymanager al llarg de mï¿½s d'un mï¿½tode, 
+    // la transacciï¿½ es pot extendre al llarg de tot el BEAN i passar de mï¿½tode a mï¿½tode
+    // Aquest parï¿½metre ï¿½s necessï¿½ri per a un TransactionManagementType = CONTAINER
+    // Per defecte es fa commit de la transacciï¿½, si s'ha fet un persist, al finalitzar cada mï¿½tode.
+    // Es fa rollback si abans de sortir del mï¿½tode, es produeix una excepciï¿½
     @PersistenceContext(unitName = "Exemple1PersistenceUnit", type = PersistenceContextType.EXTENDED)
     private EntityManager em;
 
@@ -69,12 +69,16 @@ public class JuegoEJB implements IJuego {
     private Partida partidaActual = null;
     private boolean primerVolteo = true;
     private boolean victoria = false;
-  
+
     private MazoDeCartas mazo;
     private Timer timer;
-    
 
-    // Injecció d'un EJB local. En aquest cas no cal fer lookup.
+    private CartaMemory carta1;
+    private CartaMemory carta2;
+    
+    private int tiempoMaximo;
+
+    // Injecciï¿½ d'un EJB local. En aquest cas no cal fer lookup.
     @EJB
     AppSingletonEJB singleton;
 
@@ -100,21 +104,25 @@ public class JuegoEJB implements IJuego {
             log.log(Level.INFO, "ERROR conectando:  {0} ", new Object[]{ex.toString()});
         }
     }
-    
-    
 
     @Override
     public Jugador getSesion(Jugador j) throws JugadorException {
         if ((j.getEmail() == null || j.getEmail().isBlank() || j.getEmail().isEmpty())
                 || (j.getNombre() == null || j.getNombre().isBlank() || j.getNombre().isEmpty())) {
-            String msg = "El formato del nombre o email no es válido";
+            String msg = "El formato del nombre o email no es vï¿½lido";
             log.log(Level.WARNING, msg);
             throw new JugadorException(msg);
         }
 
-        String consulta = "SELECT j FROM Jugador j WHERE j.email = :email";
-        TypedQuery<Jugador> query = em.createQuery(consulta, Jugador.class);
-        Jugador jugador = query.setParameter("email", j.getEmail()).getSingleResult();
+        Jugador jugador = null;
+        try {
+            String consulta = "SELECT j FROM Jugador j WHERE j.email = :email AND j.nombre = :nombre";
+            TypedQuery<Jugador> query = em.createQuery(consulta, Jugador.class);
+            jugador = query.setParameter("email", j.getEmail()).setParameter("nombre", j.getNombre()).getSingleResult();
+
+        } catch (Exception ex) {
+            throw new JugadorException(ex.getMessage());
+        }
 
         if (jugador == null) {
             String msg = "El jugador no existe.";
@@ -130,7 +138,7 @@ public class JuegoEJB implements IJuego {
     @Remove
     @Override
     public void cerrarSesion() {
-        log.log(Level.INFO, "Sesión finalizada: " + this.emailUsuario);
+        log.log(Level.INFO, "Sesiï¿½n finalizada: " + this.emailUsuario);
     }
 
     @Override
@@ -138,7 +146,7 @@ public class JuegoEJB implements IJuego {
 
         if ((jugador.getEmail() == null || jugador.getEmail().isBlank() || jugador.getEmail().isEmpty())
                 || (jugador.getNombre() == null || jugador.getNombre().isBlank() || jugador.getNombre().isEmpty())) {
-            String msg = "El formato del nombre o email no es válido";
+            String msg = "El formato del nombre o email no es vï¿½lido";
             log.log(Level.WARNING, msg);
             throw new JugadorException(msg);
         }
@@ -147,9 +155,9 @@ public class JuegoEJB implements IJuego {
         try {
             String consulta = "SELECT j FROM Jugador j WHERE j.email = :email";
             TypedQuery<Jugador> query = em.createQuery(consulta, Jugador.class);
-            j = query.setParameter("email", jugador.getEmail()).getSingleResult();
+            j = query.setParameter("email", jugador.getEmail())
+                    .getSingleResult();
         } catch (Exception ex) {
-
         }
 
         if (j != null) {
@@ -185,16 +193,18 @@ public class JuegoEJB implements IJuego {
         primerVolteo = true;
         victoria = false;
 
-
         switch (partida.getDificultad()) {
             case 0:
-                partida.setTiempoRestante(300);
+                tiempoMaximo = 300;
+                partida.setTiempoRestante(tiempoMaximo);
+                break;
+            case 1:
+                tiempoMaximo = 200;
+                partida.setTiempoRestante(tiempoMaximo);
                 break;
             case 2:
-                partida.setTiempoRestante(200);
-                break;
-            case 3:
-                partida.setTiempoRestante(100);
+                tiempoMaximo = 100;
+                partida.setTiempoRestante(tiempoMaximo);
                 break;
             default:
                 throw new AssertionError();
@@ -237,14 +247,17 @@ public class JuegoEJB implements IJuego {
     }
 
     @Override
-    public boolean cartasConciden(CartaMemory carta1, CartaMemory carta2) {
+    public boolean cartasConciden(CartaMemory carta1, CartaMemory carta2, int indiceCarta1, int indiceCarta2) {
         if (carta1 == null || carta2 == null) {
             return false;
         }
         boolean coinciden = carta1.isMismaCarta(carta2);
         if (coinciden) {
+            mazo.getCartas().get(indiceCarta1).setMatched(true);
+            mazo.getCartas().get(indiceCarta2).setMatched(true);
             carta1.setMatched(true);
             carta2.setMatched(true);
+
         }
         return coinciden;
     }
@@ -254,28 +267,24 @@ public class JuegoEJB implements IJuego {
         if (partidaActual == null) {
             throw new PartidaException("NO existe partida actual");
         }
-        partidaActual.setNumIntentos(partidaActual.getNumIntentos());
+        partidaActual.setNumIntentos(partidaActual.getNumIntentos() + 1);
         Utils.persisteixAmbTransaccio(partidaActual, userTransaction, em, log);
 
         return partidaActual.getNumIntentos();
     }
 
     @Override
-    public void  voltearCarta() {
-       
-         if(primerVolteo){
-             primerVolteo = false;
-         }else{
-             primerVolteo = true;
-         }
-    }
+    public void voltearCarta() {
 
+        primerVolteo = !primerVolteo;
+    }
+    
     @Override
     public List<Partida> getHallOfGame() throws Exception {
         TypedQuery<Partida> query = em.createQuery("SELECT p FROM Partida p WHERE p.id IN (SELECT MAX(p2.id) FROM Partida p2 GROUP BY p2.jugador.id) ORDER BY p.puntos DESC", Partida.class);
         return query.getResultList();
     }
-    
+
     @Override
     public List<Partida> getHallOfGame(int dificultad) throws Exception {
         TypedQuery<Partida> query = em.createQuery("SELECT p FROM Partida p WHERE p.id IN (SELECT MAX(p2.id) FROM Partida p2 WHERE p2.dificultad = :dificultad GROUP BY p2.jugador.id) ORDER BY p.puntos DESC", Partida.class);
@@ -306,7 +315,7 @@ public class JuegoEJB implements IJuego {
         puntos = (80 - intentos) * (maxTiempo - segundos);
 
         puntos = Math.max(puntos, 0);
-        
+
         if (!victoria) {
             puntos = 0;
         }
@@ -322,7 +331,7 @@ public class JuegoEJB implements IJuego {
 
         if (tiempoActual > 0) {
             partidaActual.setTiempoRestante(tiempoActual - 1);
-        } 
+        }
         System.out.println("Tiempo actualizado: " + tiempoActual);
     }
 
@@ -347,4 +356,19 @@ public class JuegoEJB implements IJuego {
     public boolean getVoleo() {
         return primerVolteo;
     }
+
+    @Override
+    public int getTiempoMaximo() {
+        return tiempoMaximo;
+    }
+
+    @Override
+    public byte[] getCartaImage(CartaMemory carta) {
+        try {
+            return carta.isGirada() ? carta.getImage() : carta.getBackOfCardImage();
+        } catch (IOException ex) {
+            return null;
+        }
+    }
+
 }

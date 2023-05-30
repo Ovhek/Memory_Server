@@ -68,7 +68,7 @@ public interface IJuego {
      * Comprueba si las dos cartas que estan en el servidor coinciden
      * @return si coinciden o no.
      */
-    public boolean cartasConciden(CartaMemory carta1, CartaMemory carta2);
+    public boolean cartasConciden(CartaMemory carta1, CartaMemory carta2, int indiceCarta1, int indiceCarta2);
     
     /**
      * Aumenta el contador de intentos.
@@ -121,4 +121,18 @@ public interface IJuego {
      * @return si se ha perdido o no.
      */
     public boolean comprobarDerrota();
+    
+    /**
+     * Devuelve el tiempoMaximo de la partida
+     * @return tiempo maximo de la partida;
+     */
+    public int getTiempoMaximo();
+    
+    /**
+     * Obtiene la imagen de la carta del servidor.
+     * @param cartaMemory carta de la cual obtener la imagen.
+     * @return array de bytes que represetan la imagen
+     */
+    public byte[] getCartaImage(CartaMemory cartaMemory);
+
 }
