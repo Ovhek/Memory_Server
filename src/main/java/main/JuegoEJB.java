@@ -10,13 +10,20 @@ import common.PartidaException;
 import common.Utils;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
@@ -75,7 +82,7 @@ public class JuegoEJB implements IJuego {
 
     private CartaMemory carta1;
     private CartaMemory carta2;
-    
+
     private int tiempoMaximo;
 
     // Injecci� d'un EJB local. En aquest cas no cal fer lookup.
@@ -278,18 +285,50 @@ public class JuegoEJB implements IJuego {
 
         primerVolteo = !primerVolteo;
     }
-    
+
     @Override
     public List<Partida> getHallOfGame() throws Exception {
-        TypedQuery<Partida> query = em.createQuery("SELECT p FROM Partida p WHERE p.id IN (SELECT MAX(p2.id) FROM Partida p2 GROUP BY p2.jugador.id) ORDER BY p.puntos DESC", Partida.class);
-        return query.getResultList();
+        String jpql = "SELECT p FROM Partida p";
+
+        TypedQuery<Partida> query = em.createQuery(jpql, Partida.class);
+        List<Partida> resultList = query.getResultList();
+
+        return partidaSinDuplicados(resultList);
     }
 
     @Override
     public List<Partida> getHallOfGame(int dificultad) throws Exception {
-        TypedQuery<Partida> query = em.createQuery("SELECT p FROM Partida p WHERE p.id IN (SELECT MAX(p2.id) FROM Partida p2 WHERE p2.dificultad = :dificultad GROUP BY p2.jugador.id) ORDER BY p.puntos DESC", Partida.class);
+        String jpql = "SELECT p FROM Partida p WHERE p.dificultad = :dificultad ";
+
+        TypedQuery<Partida> query = em.createQuery(jpql, Partida.class);
         query.setParameter("dificultad", dificultad);
-        return query.getResultList();
+        List<Partida> resultList = query.getResultList();
+
+        
+        return partidaSinDuplicados(resultList);
+
+    }
+
+    /**
+     * Elimina los duplicados del hall of fame
+     * @param partidaConDuplicado lista con duplicados
+     * @return lista sin duplicados
+     */
+    private List<Partida> partidaSinDuplicados(List<Partida> partidaConDuplicado) {
+        partidaConDuplicado.sort((partida1, partida2) -> partida2.getPuntos() - partida1.getPuntos());
+
+        Set<Long> jugadorIds = new HashSet<>();
+
+        List<Partida> partidaListSinDuplicados = new ArrayList<>();
+
+        for (Partida partida : partidaConDuplicado) {
+            Long idJugador = partida.getJugador().getId();
+            if (!jugadorIds.contains(idJugador)) {
+                partidaListSinDuplicados.add(partida);
+                jugadorIds.add(idJugador);
+            }
+        }
+        return partidaListSinDuplicados;
     }
 
     private int calcularPuntos() {
