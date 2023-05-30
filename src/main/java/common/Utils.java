@@ -138,13 +138,14 @@ public class Utils {
     }
     
         /**
-     * Alerta de confirmaci�n al salir de la app
+     * Alerta de Victoria
+     * @param puntos puntos a enseñar
      */
-    public static void alertVictoria() {
+    public static void alertVictoria(int puntos) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Info");
         alert.setHeaderText(null);
-        alert.setContentText("Has ganado!");
+        alert.setContentText("Has ganado! \n Tu puntuación: " + puntos);
         alert.show();
     }
     
