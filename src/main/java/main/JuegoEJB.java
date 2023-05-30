@@ -332,7 +332,6 @@ public class JuegoEJB implements IJuego {
         if (tiempoActual > 0) {
             partidaActual.setTiempoRestante(tiempoActual - 1);
         }
-        System.out.println("Tiempo actualizado: " + tiempoActual);
     }
 
     @Override
