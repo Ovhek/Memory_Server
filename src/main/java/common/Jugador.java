@@ -8,6 +8,7 @@ package common;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,7 +37,7 @@ public class Jugador implements Serializable {
     @Email(message = "El email no es válido")
     private String email;
     
-    @OneToMany(mappedBy = "jugador")
+    @OneToMany(mappedBy = "jugador", fetch = FetchType.EAGER)
     private List<Partida> partidas;
     
     public Jugador() {

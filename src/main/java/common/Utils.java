@@ -32,11 +32,11 @@ import javafx.scene.media.MediaPlayer;
  * @author alex
  */
 public class Utils {
-    // Variables que controlan la reproducción de la música
+    // Variables que controlan la reproducciï¿½n de la mï¿½sica
     private static Media media = null;
     private static MediaPlayer player = null;
     
-    // Variable que controla si el usuario está logueado
+    // Variable que controla si el usuario estï¿½ logueado
     public static boolean login = false;
     
     // Variable que controla la dificultad elegida por el usuario para empezar la partida
@@ -72,7 +72,7 @@ public class Utils {
             }
 
         } else {
-            String msg = "Errores de validación: " + errors.toString();
+            String msg = "Errores de validaciï¿½n: " + errors.toString();
             log.log(Level.INFO, msg);
             throw new Exception(msg);
         }
@@ -111,7 +111,7 @@ public class Utils {
             }
 
         } else {
-            String msg = "Errores de validación: " + errors.toString();
+            String msg = "Errores de validaciï¿½n: " + errors.toString();
             log.log(Level.INFO, msg);
             throw new Exception(msg);
         }
@@ -120,13 +120,13 @@ public class Utils {
     }
 
     /**
-     * Alerta de confirmación al salir de la app
+     * Alerta de confirmaciï¿½n al salir de la app
      */
     public static void alertExit() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Diálogo de confirmación");
+        alert.setTitle("Diï¿½logo de confirmaciï¿½n");
         alert.setHeaderText(null);
-        alert.setContentText("¿Deseas salir del juego?");
+        alert.setContentText("ï¿½Deseas salir del juego?");
 
         Optional<ButtonType> resultado = alert.showAndWait();
         if (resultado.isPresent()) {
@@ -137,6 +137,17 @@ public class Utils {
         }
     }
     
+        /**
+     * Alerta de confirmaciï¿½n al salir de la app
+     */
+    public static void alertVictoria() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Info");
+        alert.setHeaderText(null);
+        alert.setContentText("Has ganado!");
+        alert.show();
+    }
+    
     /**
      * Alerta de aviso de tiempo acabado
      */
@@ -144,7 +155,7 @@ public class Utils {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Info");
         alert.setHeaderText(null);
-        alert.setContentText("¡Tiempo finalizado!");
+        alert.setContentText("ï¿½Tiempo finalizado!");
         alert.show();
     }
     
@@ -155,12 +166,12 @@ public class Utils {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Info");
         alert.setHeaderText(null);
-        alert.setContentText("¡Debes hacer login antes de seguir en la app!");
+        alert.setContentText("ï¿½Debes hacer login antes de seguir en la app!");
         alert.showAndWait();
     }
 
     /**
-     * Obtener día y hora actual con formato EU
+     * Obtener dï¿½a y hora actual con formato EU
      *
      * @return String
      */
@@ -171,7 +182,7 @@ public class Utils {
     }
     
     /**
-     * Reproducir la música de fondo del juego indefinidamente
+     * Reproducir la mï¿½sica de fondo del juego indefinidamente
      */
     public static void playMusic() {
         
@@ -186,11 +197,11 @@ public class Utils {
             player = new MediaPlayer(media);
 
             // Configuraciones adicionales del reproductor
-            player.setCycleCount(MediaPlayer.INDEFINITE); // Repetir la música de fondo indefinidamente
+            player.setCycleCount(MediaPlayer.INDEFINITE); // Repetir la mï¿½sica de fondo indefinidamente
             player.setVolume(0.25); // Volumen (0.0 - 1.0)
             player.setStartTime(Duration.ZERO); // Iniciar desde el principio
             
-            // Reproducir la música
+            // Reproducir la mï¿½sica
             player.play();
 
         } catch (URISyntaxException e) {
