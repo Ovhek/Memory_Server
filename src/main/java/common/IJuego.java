@@ -68,7 +68,7 @@ public interface IJuego {
      * Comprueba si las dos cartas que estan en el servidor coinciden
      * @return si coinciden o no.
      */
-    public boolean cartasConciden();
+    public boolean cartasConciden(CartaMemory carta1, CartaMemory carta2);
     
     /**
      * Aumenta el contador de intentos.
@@ -82,7 +82,12 @@ public interface IJuego {
      * @param carta carta a voltear
      * @return 
      */
-    public byte[] voltearCarta(CartaMemory carta);
+    
+    public boolean getVoleo();
+    
+  
+    
+    public void voltearCarta();
     
     /**
      * Función encargada de obtener el salón de la fama.

@@ -67,13 +67,12 @@ public class JuegoEJB implements IJuego {
 
     private String emailUsuario = null;
     private Partida partidaActual = null;
-    private CartaMemory carta1 = null;
-    private CartaMemory carta2 = null;
     private boolean primerVolteo = true;
     private boolean victoria = false;
-    private boolean derrota = false;
+  
     private MazoDeCartas mazo;
     private Timer timer;
+    
 
     // Injecció d'un EJB local. En aquest cas no cal fer lookup.
     @EJB
@@ -101,6 +100,8 @@ public class JuegoEJB implements IJuego {
             log.log(Level.INFO, "ERROR conectando:  {0} ", new Object[]{ex.toString()});
         }
     }
+    
+    
 
     @Override
     public Jugador getSesion(Jugador j) throws JugadorException {
@@ -181,11 +182,9 @@ public class JuegoEJB implements IJuego {
     public Partida empezarPartida(Partida partida) throws PartidaException {
         Partida p = null;
         partidaActual = null;
-        carta1 = null;
-        carta2 = null;
         primerVolteo = true;
         victoria = false;
-        derrota = false;
+
 
         switch (partida.getDificultad()) {
             case 0:
@@ -238,7 +237,7 @@ public class JuegoEJB implements IJuego {
     }
 
     @Override
-    public boolean cartasConciden() {
+    public boolean cartasConciden(CartaMemory carta1, CartaMemory carta2) {
         if (carta1 == null || carta2 == null) {
             return false;
         }
@@ -246,8 +245,6 @@ public class JuegoEJB implements IJuego {
         if (coinciden) {
             carta1.setMatched(true);
             carta2.setMatched(true);
-            carta1 = null;
-            carta2 = null;
         }
         return coinciden;
     }
@@ -264,38 +261,13 @@ public class JuegoEJB implements IJuego {
     }
 
     @Override
-    public byte[] voltearCarta(CartaMemory carta) {
-        if (carta.isEmparejada()) {
-            try {
-                return carta.getImage();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                log.log(Level.SEVERE, "error imagenes: " + ex.getMessage());
-            }
-        }
-        carta.setGirada(!carta.isGirada());
-
-        if (carta1 == null) {
-            carta1 = carta;
-        } else if (carta2 == null) {
-            carta2 = carta;
-        } else {
-            if (primerVolteo) {
-                carta1 = carta;
-                carta2 = null;
-            } else {
-                carta2 = carta;
-                carta1 = null;
-            }
-        }
-        primerVolteo = !primerVolteo;
-        try {
-            return carta.isGirada() ? carta.getImage() : carta.getBackOfCardImage();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            log.log(Level.SEVERE, "error imagenes: " + ex.getMessage());
-            return null;
-        }
+    public void  voltearCarta() {
+       
+         if(primerVolteo){
+             primerVolteo = false;
+         }else{
+             primerVolteo = true;
+         }
     }
 
     @Override
@@ -335,7 +307,7 @@ public class JuegoEJB implements IJuego {
 
         puntos = Math.max(puntos, 0);
         
-        if (derrota) {
+        if (!victoria) {
             puntos = 0;
         }
 
@@ -350,9 +322,7 @@ public class JuegoEJB implements IJuego {
 
         if (tiempoActual > 0) {
             partidaActual.setTiempoRestante(tiempoActual - 1);
-        } else {
-            derrota = true;
-        }
+        } 
         System.out.println("Tiempo actualizado: " + tiempoActual);
     }
 
@@ -370,6 +340,11 @@ public class JuegoEJB implements IJuego {
 
     @Override
     public boolean comprobarDerrota() {
-        return derrota;
+        return !victoria;
+    }
+
+    @Override
+    public boolean getVoleo() {
+        return primerVolteo;
     }
 }
